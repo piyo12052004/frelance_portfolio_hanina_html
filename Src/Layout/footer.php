@@ -15,7 +15,7 @@
     </script>
     <?php unset($_SESSION['flash']); ?>
 <?php endif; ?>
-
+<script src="<?= BASE_URL ?>/Asset/js/app.js"></script>
 </body>
 
 </html>

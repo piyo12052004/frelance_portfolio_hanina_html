@@ -1,66 +1,90 @@
-<aside class="fixed top-0 left-0 w-64 h-screen bg-gradient-to-b from-blue-600 to-purple-600 text-white shadow-xl">
+<aside
+    x-data="{ masterOpen: <?= in_array($activeMenu, ['kategori', 'lokasi', 'supplier']) ? 'true' : 'false' ?> }"
+    class="fixed top-0 left-0 w-64 h-screen bg-gradient-to-b from-blue-600 to-purple-600 text-white shadow-xl">
 
     <div class="p-8 text-center border-b border-white/20">
+        <h2 class="text-xl font-bold">Data Aset Barang</h2>
+        <p class="text-sm text-white/80">Hanina Nur Faizah</p>
+    </div>
 
-        <h2 class="text-xl font-bold">
-            Data Aset Barang
-        </h2>
+    <div class="mt-8 px-4 space-y-2">
 
-        <p class="text-sm text-white/80">
-            Hanina Nur Faizah
-        </p>
+        <!-- Dashboard -->
+        <a href="<?= BASE_URL ?>/index.php"
+            class="flex items-center gap-3 p-3 rounded-lg transition <?= $activeMenu === 'dashboard' ? 'bg-white/20' : 'hover:bg-white/20' ?>">
+            Dashboard
+        </a>
+
+        <!-- Master -->
+        <button
+            @click="masterOpen = !masterOpen"
+            class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-white/20 transition">
+
+            <div class="flex items-center gap-3">
+                <span>Master</span>
+            </div>
+
+            <svg class="w-5 h-5 transition-transform duration-300"
+                :class="{ 'rotate-180': masterOpen }"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7" />
+            </svg>
+
+        </button>
+
+        <!-- Dropdown -->
+        <div
+            x-show="masterOpen"
+            x-transition
+            class="ml-6 space-y-1 overflow-hidden">
+
+            <a href="<?= BASE_URL ?>/Src/Master/katagori.php"
+                class="block p-2 rounded-lg transition <?= $activeMenu === 'kategori' ? 'bg-white/20' : 'hover:bg-white/20' ?>">
+                Kategori
+            </a>
+
+            <a href="<?= BASE_URL ?>/Src/Lokasi/lokasi.php"
+                class="block p-2 rounded-lg transition <?= $activeMenu === 'lokasi' ? 'bg-white/20' : 'hover:bg-white/20' ?>">
+                Lokasi
+            </a>
+
+            <a href="<?= BASE_URL ?>/Src/Supplier/supplier.php"
+                class="block p-2 rounded-lg transition <?= $activeMenu === 'supplier' ? 'bg-white/20' : 'hover:bg-white/20' ?>">
+                Supplier
+            </a>
+
+        </div>
+
+        <!-- Barang -->
+        <a href="<?= BASE_URL ?>/Src/Barang/barang.php"
+            class="flex items-center gap-3 p-3 rounded-lg transition <?= $activeMenu === 'barang' ? 'bg-white/20' : 'hover:bg-white/20' ?>">
+            Barang
+        </a>
 
     </div>
 
-    <nav class="mt-8 px-4 space-y-2">
+    <div class="absolute bottom-5 left-0 right-0 text-center text-sm text-white/70 mt-8 px-4 space-y-2">
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'superadmin') : ?>
 
-        <a href="index.php"
-            class="flex items-center gap-3 p-3 rounded-lg bg-white/20 hover:bg-white/30">
+            <a href="<?= BASE_URL ?>/Src/Setting/setting.php"
+                class="flex items-center gap-3 p-3 rounded-lg transition <?= $activeMenu === 'setting' ? 'bg-white/20 text-white' : 'hover:bg-white/20' ?>">
 
-            🏠 Dashboard
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
 
-        </a>
+                Setting
 
-        <a href="#"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20">
+            </a>
 
-            👤 About
-
-        </a>
-
-        <a href="#"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20">
-
-            💻 Skills
-
-        </a>
-
-        <a href="#"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20">
-
-            📂 Projects
-
-        </a>
-
-        <a href="#"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20">
-
-            📜 Certificate
-
-        </a>
-
-        <a href="#"
-            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20">
-
-            📞 Contact
-
-        </a>
-
-    </nav>
-
-    <div class="absolute bottom-5 left-0 right-0 text-center text-sm text-white/70">
-
-        © <?= date('Y') ?>
+        <?php endif; ?>
 
     </div>
 

@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../../Helper/config.php';
-session_start();
+require_once __DIR__ . '/../Components/modal.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Halaman yang tidak perlu login
 $currentPage = basename($_SERVER['PHP_SELF']);
@@ -26,7 +30,7 @@ if (!isset($_SESSION['login']) && !in_array($currentPage, $publicPages)) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-gray-100">
+<body x-data class="bg-gray-100">
 
     <div class="flex">
 

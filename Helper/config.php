@@ -1,4 +1,4 @@
-<!-- file untuk pemanggilan  -->
+<!-- file untuk pemanggilan secara global  -->
 <?php
 
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
