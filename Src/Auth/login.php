@@ -117,11 +117,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="flex items-center">
-                    <!-- <input id="remember_me" type="checkbox"
+                    <input id="remember_me" name="remember_me" type="checkbox"
                         class="h-4 w-4 text-blue-600 focus:ring-blue-400 border-gray-300 rounded cursor-pointer">
                     <label for="remember_me" class="ml-2 block text-sm text-gray-600 cursor-pointer">
                         Ingat saya
-                    </label> -->
+                    </label>
                 </div>
 
                 <button type="submit" name="login"

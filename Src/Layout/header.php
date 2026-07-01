@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../Helper/config.php';
+require_once __DIR__ . '/../../Helper/auth_check.php';
 require_once __DIR__ . '/../Components/modal.php';
 
 if (session_status() === PHP_SESSION_NONE) {

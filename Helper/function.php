@@ -104,63 +104,78 @@ function login($data)
 {
     global $conn;
 
+    $username = trim($data['username']);
+    $password = trim($data['password']);
+
+    $remember = isset($data['remember_me']);
+
     $errors = [];
 
-    $username = trim($data['username'] ?? '');
-    $password = $data['password'] ?? '';
-
-    if (empty($username)) {
-        $errors['username'] = "Username wajib diisi.";
+    if ($username === '') {
+        $errors['username'] = 'Username wajib diisi';
     }
 
-    if (empty($password)) {
-        $errors['password'] = "Password wajib diisi.";
+    if ($password === '') {
+        $errors['password'] = 'Password wajib diisi';
     }
 
-    if (!empty($errors)) {
+    if ($errors) {
         return [
             'status' => false,
             'errors' => $errors
         ];
     }
 
-    $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
+    $stmt = mysqli_prepare(
+        $conn,
+        "SELECT * FROM users WHERE username = ? LIMIT 1"
+    );
 
-    if (mysqli_num_rows($query) == 0) {
+    mysqli_stmt_bind_param($stmt, "s", $username);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_assoc($result);
+
+    if (!$user || !password_verify($password, $user['password'])) {
         return [
             'status' => false,
             'errors' => [
-                'username' => 'Username Atau Password Salah.'
+                'username' => 'Username atau password salah'
             ]
         ];
     }
 
-    $user = mysqli_fetch_assoc($query);
-
-    if (!password_verify($password, $user['password'])) {
-        return [
-            'status' => false,
-            'errors' => [
-                'username' => 'Username Atau Password Salah.'
-            ]
-        ];
-    }
-
-    $_SESSION['login'] = true;
+    // =========================
+    // SET SESSION
+    // =========================
     $_SESSION['login'] = true;
     $_SESSION['id'] = $user['id'];
     $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['role'] = $user['role'];
+
+    // =========================
+    // REMEMBER ME
+    // =========================
+    if ($remember) {
+
+        $token = bin2hex(random_bytes(32));
+
+        // simpan token ke database
+        $stmt = mysqli_prepare(
+            $conn,
+            "UPDATE users SET remember_token = ? WHERE id = ?"
+        );
+
+        mysqli_stmt_bind_param($stmt, "si", $token, $user['id']);
+        mysqli_stmt_execute($stmt);
+
+        // simpan cookie (30 hari)
+        setcookie("remember_me", $token, time() + (86400 * 30), "/");
+    }
 
     return [
         'status' => true,
-        'user' => [
-            'id' => $user['id'],
-            'nama_lengkap' => $user['nama_lengkap'],
-            'username' => $user['username'],
-            'role' => $user['role'],
-        ]
+        'user' => $user
     ];
 }
 

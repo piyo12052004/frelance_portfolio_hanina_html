@@ -18,9 +18,9 @@ function set_flash($type, $title, $message)
 }
 
 // ==========================
-// DELETE SUPPLIER
+// DELETE LOKASI
 // ==========================
-function deleteDataSupplier($data)
+function deleteDataLokasi($data)
 {
     global $conn;
 
@@ -28,11 +28,10 @@ function deleteDataSupplier($data)
 
     $stmt = mysqli_prepare(
         $conn,
-        "DELETE FROM supplier_m WHERE id = ?"
+        "DELETE FROM lokasi_m WHERE id = ?"
     );
 
     mysqli_stmt_bind_param($stmt, "i", $id);
-
     mysqli_stmt_execute($stmt);
 
     $affected = mysqli_stmt_affected_rows($stmt);
@@ -43,15 +42,15 @@ function deleteDataSupplier($data)
         'status' => $affected > 0,
         'affected_rows' => $affected,
         'message' => $affected > 0
-            ? 'Data supplier berhasil dihapus.'
-            : 'Data supplier gagal dihapus.'
+            ? 'Data lokasi berhasil dihapus.'
+            : 'Data lokasi gagal dihapus.'
     ];
 }
 
 // ==========================
-// GET DATA SUPPLIER
+// GET DATA LOKASI
 // ==========================
-function getDataSupplier($data = [])
+function getDataLokasi($data = [])
 {
     global $conn;
 
@@ -69,33 +68,19 @@ function getDataSupplier($data = [])
 
     $offset = ($page - 1) * $limit;
 
-    $where = "";
+    $where = '';
     $params = [];
-    $types = "";
+    $types = '';
 
-    if ($search !== "") {
-
-        $where = "
-            WHERE
-                nama_supplier LIKE ?
-                OR telepon LIKE ?
-                OR email LIKE ?
-        ";
-
-        $keyword = "%{$search}%";
-
-        $params = [
-            $keyword,
-            $keyword,
-            $keyword
-        ];
-
-        $types = "sss";
+    if ($search !== '') {
+        $where = "WHERE nama_lokasi LIKE ?";
+        $params[] = "%{$search}%";
+        $types .= "s";
     }
 
     // Total Data
     $sqlTotal = "SELECT COUNT(*) AS total
-                 FROM supplier_m
+                 FROM lokasi_m
                  $where";
 
     $stmt = mysqli_prepare($conn, $sqlTotal);
@@ -110,10 +95,10 @@ function getDataSupplier($data = [])
 
     mysqli_stmt_close($stmt);
 
-    // Data
+    // Ambil Data
     $sql = "
         SELECT *
-        FROM supplier_m
+        FROM lokasi_m
         $where
         ORDER BY id DESC
         LIMIT ?, ?
@@ -163,23 +148,20 @@ function getDataSupplier($data = [])
 }
 
 // ==========================
-// CREATE SUPPLIER
+// CREATE LOKASI
 // ==========================
-function createdDataSupplier($data)
+function createdDataLokasi($data)
 {
     global $conn;
 
-    $namaSupplier = trim($data['nama_supplier'] ?? '');
-    $alamat = trim($data['alamat'] ?? '');
-    $telepon = trim($data['telepon'] ?? '');
-    $email = trim($data['email'] ?? '');
+    $namaLokasi = trim($data['nama_lokasi'] ?? '');
+    $keterangan = trim($data['keterangan'] ?? '');
 
-    if ($namaSupplier === '') {
-
+    if ($namaLokasi === '') {
         return [
             'status' => false,
             'affected_rows' => 0,
-            'message' => 'Nama supplier wajib diisi.'
+            'message' => 'Nama lokasi wajib diisi.'
         ];
     }
 
@@ -187,15 +169,14 @@ function createdDataSupplier($data)
     $stmt = mysqli_prepare(
         $conn,
         "SELECT id
-         FROM supplier_m
-         WHERE nama_supplier = ?
+         FROM lokasi_m
+         WHERE nama_lokasi = ?
          LIMIT 1"
     );
 
-    mysqli_stmt_bind_param($stmt, "s", $namaSupplier);
+    mysqli_stmt_bind_param($stmt, "s", $namaLokasi);
 
     mysqli_stmt_execute($stmt);
-
     mysqli_stmt_store_result($stmt);
 
     if (mysqli_stmt_num_rows($stmt) > 0) {
@@ -205,7 +186,7 @@ function createdDataSupplier($data)
         return [
             'status' => false,
             'affected_rows' => 0,
-            'message' => 'Nama supplier sudah digunakan.'
+            'message' => 'Nama lokasi sudah digunakan.'
         ];
     }
 
@@ -214,24 +195,16 @@ function createdDataSupplier($data)
     // Insert
     $stmt = mysqli_prepare(
         $conn,
-        "INSERT INTO supplier_m
-        (
-            nama_supplier,
-            alamat,
-            telepon,
-            email
-        )
-        VALUES
-        (?, ?, ?, ?)"
+        "INSERT INTO lokasi_m
+        (nama_lokasi, keterangan)
+        VALUES (?, ?)"
     );
 
     mysqli_stmt_bind_param(
         $stmt,
-        "ssss",
-        $namaSupplier,
-        $alamat,
-        $telepon,
-        $email
+        "ss",
+        $namaLokasi,
+        $keterangan
     );
 
     $status = mysqli_stmt_execute($stmt);
@@ -244,56 +217,51 @@ function createdDataSupplier($data)
         'status' => $status,
         'affected_rows' => $affected,
         'message' => $status
-            ? 'Data supplier berhasil ditambahkan.'
+            ? 'Data lokasi berhasil ditambahkan.'
             : mysqli_error($conn)
     ];
 }
 
 // ==========================
-// UPDATE SUPPLIER
+// UPDATE LOKASI
 // ==========================
-function updateDataSupplier($data)
+function updateDataLokasi($data)
 {
     global $conn;
 
     $id = (int)($data['id'] ?? 0);
-
-    $namaSupplier = trim($data['nama_supplier'] ?? '');
-    $alamat = trim($data['alamat'] ?? '');
-    $telepon = trim($data['telepon'] ?? '');
-    $email = trim($data['email'] ?? '');
+    $namaLokasi = trim($data['nama_lokasi'] ?? '');
+    $keterangan = trim($data['keterangan'] ?? '');
 
     if ($id <= 0) {
-
         return [
             'status' => false,
             'affected_rows' => 0,
-            'message' => 'ID supplier tidak valid.'
+            'message' => 'ID lokasi tidak valid.'
         ];
     }
 
-    if ($namaSupplier === '') {
-
+    if ($namaLokasi === '') {
         return [
             'status' => false,
             'affected_rows' => 0,
-            'message' => 'Nama supplier wajib diisi.'
+            'message' => 'Nama lokasi wajib diisi.'
         ];
     }
 
-    // Cek nama supplier
+    // Cek duplikat
     $stmt = mysqli_prepare(
         $conn,
         "SELECT id
-         FROM supplier_m
-         WHERE nama_supplier = ?
+         FROM lokasi_m
+         WHERE nama_lokasi = ?
          AND id != ?"
     );
 
     mysqli_stmt_bind_param(
         $stmt,
         "si",
-        $namaSupplier,
+        $namaLokasi,
         $id
     );
 
@@ -308,7 +276,7 @@ function updateDataSupplier($data)
         return [
             'status' => false,
             'affected_rows' => 0,
-            'message' => 'Nama supplier sudah digunakan.'
+            'message' => 'Nama lokasi sudah digunakan.'
         ];
     }
 
@@ -317,23 +285,19 @@ function updateDataSupplier($data)
     // Update
     $stmt = mysqli_prepare(
         $conn,
-        "UPDATE supplier_m
+        "UPDATE lokasi_m
         SET
-            nama_supplier = ?,
-            alamat = ?,
-            telepon = ?,
-            email = ?,
+            nama_lokasi = ?,
+            keterangan = ?,
             updated_at = NOW()
         WHERE id = ?"
     );
 
     mysqli_stmt_bind_param(
         $stmt,
-        "ssssi",
-        $namaSupplier,
-        $alamat,
-        $telepon,
-        $email,
+        "ssi",
+        $namaLokasi,
+        $keterangan,
         $id
     );
 
@@ -347,7 +311,7 @@ function updateDataSupplier($data)
         'status' => true,
         'affected_rows' => $affected,
         'message' => $affected > 0
-            ? 'Data supplier berhasil diperbarui.'
+            ? 'Data lokasi berhasil diperbarui.'
             : 'Tidak ada data yang diubah.'
     ];
 }

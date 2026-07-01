@@ -108,6 +108,7 @@ require_once __DIR__ . '/../Layout/header.php';
                             <th class="px-4 py-3 text-left">Lokasi</th>
                             <th class="px-4 py-3 text-left">Kondisi</th>
                             <th class="px-4 py-3 text-left">Stok</th>
+                            <th class="px-4 py-3 text-left">Foto</th>
                             <th class="px-4 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -164,6 +165,24 @@ require_once __DIR__ . '/../Layout/header.php';
 
                                 <td class="px-4 py-3 font-bold text-gray-800">
                                     <?= $row['stok'] ?>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+
+                                    <?php if (!empty($row['foto']) && file_exists("../../Uploads/barang/" . $row['foto'])) : ?>
+
+                                        <img
+                                            src="../../Uploads/barang/<?= htmlspecialchars($row['foto']) ?>"
+                                            alt="<?= htmlspecialchars($row['nama_barang']) ?>"
+                                            class="w-16 h-16 object-cover rounded-lg border shadow">
+
+                                    <?php else : ?>
+
+                                        <div class="w-16 h-16 flex items-center justify-center bg-gray-100 rounded-lg border text-xs text-gray-400">
+                                            Tidak Ada
+                                        </div>
+
+                                    <?php endif; ?>
+
                                 </td>
 
                                 <!-- ACTION -->
@@ -259,9 +278,11 @@ require_once __DIR__ . '/../Layout/header.php';
 <!-- update barang -->
 <template id="modal-barang-edit-data-barang">
 
-    <form method="POST"
+    <form
+        method="POST"
+        enctype="multipart/form-data"
         x-data="{ form: {...$store.modal.data} }"
-        class="space-y-4">
+        class="max-h-[75vh] overflow-y-auto space-y-4 pr-2">
 
         <input type="hidden" name="action" value="update-data-barang">
         <input type="hidden" name="id" x-model="form.id">
@@ -351,7 +372,7 @@ require_once __DIR__ . '/../Layout/header.php';
                 type="text"
                 name="merk"
                 x-model="form.merk"
-                placeholder="Contoh: Samsung / Asus / dll"
+                placeholder="Contoh: Samsung / Asus / Lenovo"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
@@ -365,7 +386,7 @@ require_once __DIR__ . '/../Layout/header.php';
                 type="text"
                 name="tipe"
                 x-model="form.tipe"
-                placeholder="Tipe Barang"
+                placeholder="Contoh: Thinkpad T14"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
@@ -379,7 +400,7 @@ require_once __DIR__ . '/../Layout/header.php';
                 type="number"
                 name="tahun"
                 x-model="form.tahun"
-                placeholder="Contoh: 2024"
+                placeholder="2026"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
@@ -418,8 +439,44 @@ require_once __DIR__ . '/../Layout/header.php';
                 required>
         </div>
 
+        <!-- FOTO LAMA -->
+        <div x-show="form.foto">
+            <label class="block mb-2 text-sm font-medium text-gray-700">
+                Foto Saat Ini
+            </label>
+
+            <img
+                :src="'../../Uploads/barang/' + form.foto"
+                class="w-32 h-32 object-cover rounded-lg border">
+        </div>
+
+        <!-- UPLOAD FOTO -->
+        <div>
+            <label class="block mb-2 text-sm font-medium text-gray-700">
+                Upload Foto
+            </label>
+
+            <input
+                type="file"
+                name="foto"
+                accept="image/*"
+                class="block w-full text-sm text-gray-600
+                    file:mr-4
+                    file:py-2
+                    file:px-4
+                    file:rounded-lg
+                    file:border-0
+                    file:bg-blue-600
+                    file:text-white
+                    hover:file:bg-blue-700">
+
+            <p class="mt-1 text-xs text-gray-500">
+                Kosongkan jika tidak ingin mengganti foto.
+            </p>
+        </div>
+
         <!-- BUTTON -->
-        <div class="flex justify-end gap-3 pt-3">
+        <div class="sticky bottom-0 bg-white pt-4 border-t flex justify-end gap-3">
 
             <button
                 type="button"
@@ -443,7 +500,10 @@ require_once __DIR__ . '/../Layout/header.php';
 <!-- created barang -->
 <template id="modal-barang-created-barang">
 
-    <form method="POST" class="space-y-4">
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="max-h-[75vh] overflow-y-auto space-y-4 pr-2">
 
         <input type="hidden" name="action" value="created-data-barang">
 
@@ -453,11 +513,12 @@ require_once __DIR__ . '/../Layout/header.php';
                 Kode Barang
             </label>
 
-            <input type="text"
+            <input
+                type="text"
                 name="kode_barang"
                 value="<?= $kodeBarang ?>"
                 readonly
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-gray-100">
+                class="w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2">
         </div>
 
         <!-- NAMA BARANG -->
@@ -466,7 +527,8 @@ require_once __DIR__ . '/../Layout/header.php';
                 Nama Barang
             </label>
 
-            <input type="text"
+            <input
+                type="text"
                 name="nama_barang"
                 placeholder="Masukkan nama barang"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -479,7 +541,11 @@ require_once __DIR__ . '/../Layout/header.php';
                 Kategori
             </label>
 
-            <select name="kategori_id" class="w-full border rounded-lg px-4 py-2">
+            <select
+                name="kategori_id"
+                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required>
+
                 <option value="">-- Pilih Kategori --</option>
 
                 <?php foreach ($kategori as $k) : ?>
@@ -487,6 +553,7 @@ require_once __DIR__ . '/../Layout/header.php';
                         <?= $k['nama_kategori'] ?>
                     </option>
                 <?php endforeach; ?>
+
             </select>
         </div>
 
@@ -496,7 +563,11 @@ require_once __DIR__ . '/../Layout/header.php';
                 Lokasi
             </label>
 
-            <select name="lokasi_id" class="w-full border rounded-lg px-4 py-2">
+            <select
+                name="lokasi_id"
+                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required>
+
                 <option value="">-- Pilih Lokasi --</option>
 
                 <?php foreach ($lokasi as $l) : ?>
@@ -504,6 +575,7 @@ require_once __DIR__ . '/../Layout/header.php';
                         <?= $l['nama_lokasi'] ?>
                     </option>
                 <?php endforeach; ?>
+
             </select>
         </div>
 
@@ -513,19 +585,23 @@ require_once __DIR__ . '/../Layout/header.php';
                 Merk
             </label>
 
-            <input type="text"
+            <input
+                type="text"
                 name="merk"
-                placeholder="Contoh: Samsung / Asus / dll"
+                placeholder="Contoh: Asus, Lenovo, Samsung"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
+
+        <!-- TIPE -->
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-700">
                 Tipe
             </label>
 
-            <input type="text"
+            <input
+                type="text"
                 name="tipe"
-                placeholder="Tipe Barang"
+                placeholder="Contoh: Thinkpad T14"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
@@ -535,9 +611,12 @@ require_once __DIR__ . '/../Layout/header.php';
                 Tahun
             </label>
 
-            <input type="number"
+            <input
+                type="number"
                 name="tahun"
-                placeholder="Contoh: 2024"
+                min="2000"
+                max="<?= date('Y') ?>"
+                placeholder="<?= date('Y') ?>"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
 
@@ -547,13 +626,16 @@ require_once __DIR__ . '/../Layout/header.php';
                 Kondisi
             </label>
 
-            <select name="kondisi"
+            <select
+                name="kondisi"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required>
+
                 <option value="">-- Pilih Kondisi --</option>
                 <option value="Baik">Baik</option>
                 <option value="Rusak Ringan">Rusak Ringan</option>
                 <option value="Rusak Berat">Rusak Berat</option>
+
             </select>
         </div>
 
@@ -563,24 +645,53 @@ require_once __DIR__ . '/../Layout/header.php';
                 Stok
             </label>
 
-            <input type="number"
+            <input
+                type="number"
                 name="stok"
-                placeholder="Jumlah stok"
+                min="0"
+                value="0"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required>
         </div>
 
-        <!-- BUTTON -->
-        <div class="flex justify-end gap-3 pt-3">
+        <!-- FOTO -->
+        <div>
+            <label class="block mb-2 text-sm font-medium text-gray-700">
+                Upload Foto
+            </label>
 
-            <button type="button"
+            <input
+                type="file"
+                name="foto"
+                accept="image/*"
+                class="block w-full text-sm text-gray-600
+                    file:mr-4
+                    file:rounded-lg
+                    file:border-0
+                    file:bg-blue-600
+                    file:px-4
+                    file:py-2
+                    file:text-white
+                    hover:file:bg-blue-700">
+
+            <p class="mt-1 text-xs text-gray-500">
+                Format: JPG, JPEG, PNG. Maksimal 2 MB.
+            </p>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="sticky bottom-0 bg-white border-t pt-4 flex justify-end gap-3">
+
+            <button
+                type="button"
                 @click="$store.modal.close()"
-                class="px-4 py-2 rounded-lg border hover:bg-gray-100">
+                class="rounded-lg border px-4 py-2 hover:bg-gray-100">
                 Batal
             </button>
 
-            <button type="submit"
-                class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
+            <button
+                type="submit"
+                class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
                 Simpan
             </button>
 

@@ -57,12 +57,12 @@
                 Kategori
             </a>
 
-            <a href="<?= BASE_URL ?>/Src/Lokasi/lokasi.php"
+            <a href="<?= BASE_URL ?>/Src/Master/lokasi.php"
                 class="block p-2 rounded-lg transition <?= $activeMenu === 'lokasi' ? 'bg-white/20' : 'hover:bg-white/20' ?>">
                 Lokasi
             </a>
 
-            <a href="<?= BASE_URL ?>/Src/Supplier/supplier.php"
+            <a href="<?= BASE_URL ?>/Src/Master/supplier.php"
                 class="block p-2 rounded-lg transition <?= $activeMenu === 'supplier' ? 'bg-white/20' : 'hover:bg-white/20' ?>">
                 Supplier
             </a>

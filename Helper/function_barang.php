@@ -272,7 +272,10 @@ function updateDataBarang($data)
 
     $updated_by = (int)$_SESSION['id'];
 
+    // ==========================
     // Validasi
+    // ==========================
+
     if (
         $id <= 0 ||
         empty($nama_barang) ||
@@ -286,35 +289,139 @@ function updateDataBarang($data)
         ];
     }
 
-    // Validasi tahun
+    // ==========================
+    // Validasi Tahun
+    // ==========================
+
     $tahun = trim($data['tahun']);
 
     if ($tahun == '') {
+
         $tahunSql = "NULL";
+
     } elseif (!is_numeric($tahun) || $tahun < 1901 || $tahun > 2155) {
+
         return [
             'status' => false,
             'message' => 'Tahun tidak valid.'
         ];
+
     } else {
+
         $tahunSql = (int)$tahun;
+
     }
 
-    // Cek apakah kode barang dipakai barang lain
+    // ==========================
+    // Cek kode barang
+    // ==========================
+
     $cek = mysqli_query(
         $conn,
         "SELECT id
-         FROM barang_t
-         WHERE kode_barang='$kode_barang'
-         AND id<>$id"
+        FROM barang_t
+        WHERE kode_barang='$kode_barang'
+        AND id<>$id"
     );
 
     if (mysqli_num_rows($cek) > 0) {
+
         return [
             'status' => false,
             'message' => 'Kode barang sudah digunakan.'
         ];
+
     }
+
+    // ==========================
+    // Ambil foto lama
+    // ==========================
+
+    $queryFoto = mysqli_query(
+        $conn,
+        "SELECT foto
+        FROM barang_t
+        WHERE id=$id"
+    );
+
+    $oldFoto = mysqli_fetch_assoc($queryFoto)['foto'] ?? null;
+
+    $foto = $oldFoto;
+
+    // ==========================
+    // Upload Foto Baru
+    // ==========================
+
+    if (
+        isset($_FILES['foto']) &&
+        $_FILES['foto']['error'] != UPLOAD_ERR_NO_FILE
+    ) {
+
+        $file = $_FILES['foto'];
+
+        if ($file['size'] > 2 * 1024 * 1024) {
+
+            return [
+                'status' => false,
+                'message' => 'Ukuran foto maksimal 2 MB.'
+            ];
+
+        }
+
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+        $ext = strtolower(pathinfo(
+            $file['name'],
+            PATHINFO_EXTENSION
+        ));
+
+        if (!in_array($ext, $allowed)) {
+
+            return [
+                'status' => false,
+                'message' => 'Format foto harus JPG, JPEG, PNG atau WEBP.'
+            ];
+
+        }
+
+        $uploadDir = __DIR__ . '/../Uploads/barang/';
+
+        if (!is_dir($uploadDir)) {
+
+            mkdir($uploadDir, 0777, true);
+
+        }
+
+        $newFoto = uniqid('barang_', true) . "." . $ext;
+
+        if (
+            !move_uploaded_file(
+                $file['tmp_name'],
+                $uploadDir . $newFoto
+            )
+        ) {
+
+            return [
+                'status' => false,
+                'message' => 'Upload foto gagal.'
+            ];
+
+        }
+
+        // Hapus foto lama
+        if (
+            !empty($oldFoto) &&
+            file_exists($uploadDir . $oldFoto)
+        ) {
+            unlink($uploadDir . $oldFoto);
+        }
+
+        $foto = $newFoto;
+    }
+
+    // ==========================
+    // Update
+    // ==========================
 
     $query = "
         UPDATE barang_t SET
@@ -326,16 +433,19 @@ function updateDataBarang($data)
             tahun=$tahunSql,
             kondisi='$kondisi',
             stok=$stok,
+            foto=" . ($foto ? "'$foto'" : "NULL") . ",
             updated_by=$updated_by,
             updated_at=NOW()
         WHERE id=$id
     ";
 
     if (mysqli_query($conn, $query)) {
+
         return [
             'status' => true,
             'message' => 'Data barang berhasil diperbarui.'
         ];
+
     }
 
     return [
@@ -343,47 +453,7 @@ function updateDataBarang($data)
         'message' => mysqli_error($conn)
     ];
 }
-function deleteDataBarang($data)
-{
-    global $conn;
 
-    $id = (int)($data['id'] ?? 0);
-
-    // Validasi ID
-    if ($id <= 0) {
-        return [
-            'status' => false,
-            'message' => 'ID barang tidak valid.'
-        ];
-    }
-
-    // Cek apakah data ada
-    $cek = mysqli_query($conn, "
-        SELECT id
-        FROM barang_t
-        WHERE id = $id
-        LIMIT 1
-    ");
-
-    if (mysqli_num_rows($cek) === 0) {
-        return [
-            'status' => false,
-            'message' => 'Data barang tidak ditemukan.'
-        ];
-    }
-
-    // Hapus data
-    $query = "DELETE FROM barang_t WHERE id = $id";
-
-    if (mysqli_query($conn, $query)) {
-        return [
-            'status' => true,
-            'message' => 'Data barang berhasil dihapus.'
-        ];
-    }
-
-    return [
-        'status' => false,
-        'message' => 'Gagal menghapus data: ' . mysqli_error($conn)
-    ];
-}
+// function deleteDataBarang($data){
+//     tolong hapus data barang
+// }

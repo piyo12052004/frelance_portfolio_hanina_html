@@ -1,8 +1,33 @@
 <?php
-// Panggil helper untuk membaca session server
 require_once __DIR__ . '/../../Helper/function.php';
 
-// Kosongkan session di sisi server
+// session_start();
+
+// ==========================
+// HAPUS REMEMBER ME COOKIE
+// ==========================
+if (isset($_COOKIE['remember_me'])) {
+    setcookie('remember_me', '', time() - 3600, '/');
+}
+
+// ==========================
+// HAPUS TOKEN DI DATABASE (optional tapi penting)
+// ==========================
+if (isset($_SESSION['id'])) {
+    global $conn;
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "UPDATE users SET remember_token = NULL WHERE id = ?"
+    );
+
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION['id']);
+    mysqli_stmt_execute($stmt);
+}
+
+// ==========================
+// CLEAR SESSION
+// ==========================
 $_SESSION = [];
 
 if (ini_get("session.use_cookies")) {
@@ -20,11 +45,12 @@ if (ini_get("session.use_cookies")) {
 
 session_destroy();
 
-// Mulai session baru sesaat untuk menampung notifikasi SweetAlert
+// ==========================
+// FLASH MESSAGE
+// ==========================
 session_start();
 set_flash('success', 'Logout Berhasil', 'Anda telah keluar dari sistem.');
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 
