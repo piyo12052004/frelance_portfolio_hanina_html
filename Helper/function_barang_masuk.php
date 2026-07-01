@@ -384,3 +384,74 @@ function updateDataBarangMasuk($data)
         ];
     }
 }
+
+function deleteDataBarangMasuk($data)
+{
+    global $conn;
+    
+    $id = (int)($data['id'] ?? 0);
+
+    if ($id <= 0) {
+        return [
+            'status' => false,
+            'message' => 'ID tidak valid.'
+        ];
+    }
+
+    // Ambil data barang masuk
+    $query = mysqli_query($conn, "
+        SELECT barang_id, jumlah
+        FROM barang_masuk_t
+        WHERE id = $id
+    ");
+
+    if (mysqli_num_rows($query) == 0) {
+        return [
+            'status' => false,
+            'message' => 'Data tidak ditemukan.'
+        ];
+    }
+
+    $barangMasuk = mysqli_fetch_assoc($query);
+
+    mysqli_begin_transaction($conn);
+
+    try {
+
+        // Kurangi stok barang
+        mysqli_query($conn, "
+            UPDATE barang_t
+            SET stok = stok - {$barangMasuk['jumlah']}
+            WHERE id = {$barangMasuk['barang_id']}
+        ");
+
+        if (mysqli_affected_rows($conn) == 0) {
+            throw new Exception("Gagal memperbarui stok barang.");
+        }
+
+        // Hapus transaksi barang masuk
+        mysqli_query($conn, "
+            DELETE FROM barang_masuk_t
+            WHERE id = $id
+        ");
+
+        if (mysqli_affected_rows($conn) == 0) {
+            throw new Exception("Gagal menghapus data.");
+        }
+
+        mysqli_commit($conn);
+
+        return [
+            'status' => true,
+            'message' => 'Data barang masuk berhasil dihapus.'
+        ];
+    } catch (Exception $e) {
+
+        mysqli_rollback($conn);
+
+        return [
+            'status' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+}

@@ -26,6 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'update-barang-edit-data-barang-masuk':
             $result = updateDataBarangMasuk($_POST);
             break;
+        case 'delete-data-barang-masuk-by-id':
+            $result = deleteDataBarangMasuk($_POST);
+            break;
         default:
             $result = [
                 'status' => false,
@@ -206,7 +209,7 @@ require_once __DIR__ . '/../Layout/header.php';
                                             type="button"
                                             @click="$store.modal.show({
                                             title: 'Edit Data',
-                                            template: 'modal-barang-edit-data-barang',
+                                            template: 'modal-barang-edit-data-barang-masuk',
                                             size: 'max-w-2xl',
                                             data: <?= htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8') ?>
                                             })"
@@ -222,7 +225,7 @@ require_once __DIR__ . '/../Layout/header.php';
                                             <input
                                                 type="hidden"
                                                 name="action"
-                                                value="delete-data-barang-by-id">
+                                                value="delete-data-barang-masuk-by-id">
 
                                             <input
                                                 type="hidden"
@@ -351,7 +354,7 @@ require_once __DIR__ . '/../Layout/header.php';
 
 </div>
 <!-- edit -->
-<template id="modal-barang-edit-data-barang">
+<template id="modal-barang-edit-data-barang-masuk">
 
     <form
         method="POST"
