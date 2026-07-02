@@ -198,7 +198,7 @@ class BarangMasuk extends Database
 
     public function update($data)
     {
-        session_start();
+        // session_start();
 
         $id          = (int)($data['id'] ?? 0);
         $barang_id   = (int)($data['barang_id'] ?? 0);
