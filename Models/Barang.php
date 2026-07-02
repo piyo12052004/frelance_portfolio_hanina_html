@@ -249,7 +249,7 @@ class Barang extends Database
 
     public function update($data, $files, $id)
     {
-        session_start();
+        // session_start();
 
         $id = (int)$id;
 
@@ -354,7 +354,7 @@ class Barang extends Database
 
     public function delete($id)
     {
-        session_start();
+        // session_start();
 
         $id = (int)$id;
 
