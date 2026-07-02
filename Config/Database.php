@@ -14,7 +14,7 @@ class Database
         $this->host = getenv('DB_HOST') ?: 'localhost';
         $this->dbname = getenv('DB_DATABASE') ?: 'data_aset_barang';
         $this->username = getenv('DB_USERNAME') ?: 'root';
-        $this->password = getenv('DB_PASSWORD') ?: '';
+        $this->password = getenv('DB_PASSWORD') ?: 'root123';
 
         $this->conn = new mysqli(
             $this->host,
