@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+
+  app:
+    image: pyoawndi12/php-data-aset-barang-80:latest
+    container_name: php-data-aset-barang-80-container
+    restart: unless-stopped
+
+    ports:
+      - "8081:80"
+
+    depends_on:
+      - mysql
+
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: data_aset_barang
+      DB_USERNAME: root
+      DB_PASSWORD: root123
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-aset
+
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: data_aset_barang
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
