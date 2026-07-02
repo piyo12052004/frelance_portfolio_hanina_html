@@ -8,7 +8,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-use FPDF;
+// use FPDF;
 
 class BarangMasukController
 {
