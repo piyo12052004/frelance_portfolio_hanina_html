@@ -15,7 +15,7 @@ $totalBarangMasuk  = $data['totalBarangMasuk'];
 $totalBarangKeluar = $data['totalBarangKeluar'];
 
 require_once __DIR__ . "/Views/Layout/header.php";
-
+ 
 ?>
  
 <div class="p-6 bg-gray-100 min-h-screen">
