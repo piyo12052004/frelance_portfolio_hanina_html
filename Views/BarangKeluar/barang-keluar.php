@@ -163,12 +163,14 @@ require_once __DIR__ . '/../Layout/header.php';
                                         class="px-3 py-1 bg-yellow-500 text-white rounded">
                                         Edit
                                     </a>
+                                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'superadmin'): ?>
+                                        <a href="barang-keluar-deleted.php?id=<?= $row['id'] ?>"
+                                            onclick="return confirm('Hapus data?')"
+                                            class="px-3 py-1 bg-red-600 text-white rounded">
+                                            Hapus
+                                        </a>
+                                    <?php endif; ?>
 
-                                    <a href="barang-keluar-deleted.php?id=<?= $row['id'] ?>"
-                                        onclick="return confirm('Hapus data?')"
-                                        class="px-3 py-1 bg-red-600 text-white rounded">
-                                        Hapus
-                                    </a>
 
                                 </div>
 

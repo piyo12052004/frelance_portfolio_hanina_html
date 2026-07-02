@@ -152,11 +152,14 @@ require_once __DIR__ . '/../Layout/header.php';
                             </a>
 
                             <!-- DELETE -->
-                            <a href="barang-masuk-deleted.php?id=<?= $row['id'] ?>"
-                                onclick="return confirm('Yakin hapus Barang Masuk?')"
-                                class="px-4 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                                Hapus
-                            </a>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'superadmin'): ?>
+                                <a href="barang-masuk-deleted.php?id=<?= $row['id'] ?>"
+                                    onclick="return confirm('Yakin hapus Barang Masuk?')"
+                                    class="px-4 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                                    Hapus
+                                </a>
+                            <?php endif; ?>
+
 
                         </td>
 
