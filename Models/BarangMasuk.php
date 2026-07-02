@@ -83,7 +83,7 @@ class BarangMasuk extends Database
 
     public function create($data)
     {
-        session_start();
+        // session_start();
 
         $barang_id   = (int)($data['barang_id'] ?? 0);
         $supplier_id = (int)($data['supplier_id'] ?? 0);
