@@ -103,7 +103,7 @@ class Barang extends Database
 
     public function create($data, $files)
     {
-        session_start();
+        // session_start();
 
         $kode_barang = $this->conn->real_escape_string($data['kode_barang'] ?? '');
         $nama_barang = $this->conn->real_escape_string($data['nama_barang'] ?? '');
