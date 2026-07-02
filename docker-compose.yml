@@ -4,7 +4,7 @@ services:
 
   app:
     image: pyoawndi12/php-data-aset-barang-80:latest
-    container_name: php-data-aset-barang-80-container
+    # container_name: php-data-aset-barang-80-container
     restart: unless-stopped
 
     ports:
