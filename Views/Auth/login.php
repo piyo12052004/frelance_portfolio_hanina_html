@@ -8,6 +8,24 @@ $auth = new AuthController();
 
 $result = $auth->login();
 
+if (
+    !isset($_SESSION['login']) &&
+    isset($_COOKIE['remember_login'])
+) {
+
+    $userModel = new User();
+
+    $user = $userModel->getUserById($_COOKIE['remember_login']);
+
+    if ($user) {
+
+        $_SESSION['login'] = true;
+        $_SESSION['id'] = $user['id'];
+        $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
