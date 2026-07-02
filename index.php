@@ -106,8 +106,8 @@ require_once __DIR__ . "/Views/Layout/header.php";
                     <span class="text-gray-500">
                         PHP
                     </span>
+<!--  -->
 
-                    
                     <span class="font-semibold">
                         <?= phpversion(); ?>
                     </span>
