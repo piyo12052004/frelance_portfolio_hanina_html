@@ -42,12 +42,54 @@ require_once __DIR__ . '/../Layout/header.php';
             <h2 class="text-2xl font-bold">Barang Masuk</h2>
             <p class="text-sm text-gray-500">Kelola data barang masuk</p>
         </div>
+        <div class="flex items-center gap-3">
 
-        <!-- PAKAI LINK BIASA (NO JS) -->
-        <a href="barang-masuk-created.php"
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-            + Tambah
-        </a>
+            <a href="barang-masuk-pdf.php" target="_blank"
+                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2">
+
+                <!-- Icon Export -->
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2">
+
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 16V4m0 12l-4-4m4 4l4-4M4 20h16" />
+
+                </svg>
+
+                Export PDF
+            </a>
+
+            <a href="barang-masuk-excel.php" target="_blank"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center gap-2">
+
+                <!-- Icon Export -->
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2">
+
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 16V4m0 12l-4-4m4 4l4-4M4 20h16" />
+
+                </svg>
+
+                Export EXCEL
+            </a>
+
+            <a href="barang-masuk-created.php"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                + Tambah
+            </a>
+
+        </div>
     </div>
 
     <!-- SEARCH -->

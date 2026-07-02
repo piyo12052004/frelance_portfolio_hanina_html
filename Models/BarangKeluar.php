@@ -453,4 +453,28 @@ class BarangKeluar extends Database
             ];
         }
     }
+
+    public function exportData()
+    {
+        $query = "
+        SELECT
+            bk.*,
+            b.kode_barang,
+            b.nama_barang
+        FROM barang_keluar_t bk
+        INNER JOIN barang_t b
+            ON b.id = bk.barang_id
+        ORDER BY bk.id DESC
+    ";
+
+        $result = $this->conn->query($query);
+
+        $data = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+
+        return $data;
+    }
 }

@@ -327,4 +327,31 @@ class BarangMasuk extends Database
             ];
         }
     }
+
+    public function exportData()
+    {
+        $query = "
+        SELECT
+            bm.*,
+            b.kode_barang,
+            b.nama_barang,
+            s.nama_supplier
+        FROM barang_masuk_t bm
+        INNER JOIN barang_t b
+            ON b.id = bm.barang_id
+        LEFT JOIN supplier_m s
+            ON s.id = bm.supplier_id
+        ORDER BY bm.id DESC
+    ";
+
+        $result = $this->conn->query($query);
+
+        $data = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+
+        return $data;
+    }
 }

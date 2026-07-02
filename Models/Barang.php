@@ -395,12 +395,45 @@ class Barang extends Database
             'message' => $this->conn->error
         ];
     }
-    
+
     public function getAll()
     {
         $result = $this->conn->query("SELECT id, nama_barang,stok FROM barang_t ORDER BY nama_barang ASC");
 
         $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+
+        return $data;
+    }
+
+    public function exportData()
+    {
+        $query = "
+        SELECT
+            b.kode_barang,
+            b.nama_barang,
+            k.nama_kategori,
+            l.nama_lokasi,
+            b.merk,
+            b.tipe,
+            b.tahun,
+            b.kondisi,
+            b.stok,
+            b.created_at
+        FROM barang_t b
+        LEFT JOIN kategori_m k
+            ON b.kategori_id = k.id
+        LEFT JOIN lokasi_m l
+            ON b.lokasi_id = l.id
+        ORDER BY b.id DESC
+    ";
+
+        $result = $this->conn->query($query);
+
+        $data = [];
+
         while ($row = $result->fetch_assoc()) {
             $data[] = $row;
         }
