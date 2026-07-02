@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class BarangController
 {
+    
     private $barang;
 
     public function __construct()
